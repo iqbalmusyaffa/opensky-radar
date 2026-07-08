@@ -4,7 +4,7 @@ from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
 from .opensky import fetch_live_aircraft
-
+from .services import save_flight_logs
 
 class LiveAircraftConsumer(AsyncJsonWebsocketConsumer):
 
@@ -17,8 +17,10 @@ class LiveAircraftConsumer(AsyncJsonWebsocketConsumer):
             try:
                 print("=== Fetching aircraft ===")
 
-                aircraft = await sync_to_async(fetch_live_aircraft)(10)
-
+                aircraft = await sync_to_async(
+                    fetch_live_aircraft
+                )(10)
+                await sync_to_async(save_flight_logs)(aircraft)
                 print(f"Jumlah aircraft: {len(aircraft)}")
                 print(aircraft)
 
@@ -41,11 +43,19 @@ class LiveAircraftConsumer(AsyncJsonWebsocketConsumer):
         if hasattr(self, "task"):
             self.task.cancel()
 
-    async def receive(self, text_data):
-        if text_data == "get_aircraft":
-            aircraft = await sync_to_async(fetch_live_aircraft)(10)
-
-            await self.send_json({
+async def receive(self, text_data=None, bytes_data=None):
+    if text_data == "get_aircraft":
+        aircraft = await sync_to_async(
+            fetch_live_aircraft
+        )(10)
+        await sync_to_async(save_flight_logs)(aircraft)
+        await self.send_json(
+            {
                 "type": "radar_update",
                 "aircraft": aircraft,
-            })
+            }
+        )
+        
+async def disconnect(self, close_code):
+    if hasattr(self, "task") and not self.task.done():
+        self.task.cancel()
