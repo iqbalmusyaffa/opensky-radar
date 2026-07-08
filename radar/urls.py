@@ -8,6 +8,7 @@ urlpatterns = [
         
     path("api/aircraft/", views.aircraft_list, name="aircraft_list"),
     path("api/followed-aircraft/", views.followed_aircraft_list, name="followed_aircraft_list"),
+    path("api/follow-aircraft/", views.follow_aircraft_view, name="follow_aircraft"),
     path("api/logbook/", views.logbook, name="logbook"),
     path("api/aircraft/<str:icao24>/history/", views.aircraft_history, name="aircraft_history"),
 ]

@@ -1,13 +1,16 @@
 import json
 
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from .models import FollowedAircraft
+from .models import FlightLog
 
 from .opensky import fetch_live_aircraft
 from .services import (
     follow_aircraft,
     get_followed_aircraft,
+    unfollow_aircraft,
 )
 def index(request):
     return render(request, "radar/index.html")
@@ -36,7 +39,7 @@ def aircraft_list(request):
         }
     )
 
-
+@csrf_exempt
 def follow_aircraft_view(request):
     """
     Follow aircraft.
@@ -136,32 +139,80 @@ def followed_aircraft_list(request):
     
 def logbook(request):
     """
-    Menampilkan seluruh logbook.
-    Akan diimplementasikan pada Part 5.
+    Menampilkan seluruh pesawat yang pernah di-follow.
     """
+
+    if request.method != "GET":
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Method not allowed.",
+            },
+            status=405,
+        )
+
+    aircraft = FollowedAircraft.objects.all()
 
     return JsonResponse(
         {
-            "success": False,
-            "message": "Not implemented yet.",
-        },
-        status=501,
+            "success": True,
+            "data": [
+                {
+                    "icao24": a.icao24,
+                    "callsign": a.callsign,
+                    "origin_country": a.origin_country,
+                    "is_following": a.is_following,
+                    "followed_at": a.followed_at.isoformat(),
+                    "total_logs": a.logs.count(),
+                }
+                for a in aircraft
+            ],
+        }
     )
-
 
 def aircraft_history(request, icao24):
     """
-    Menampilkan history satu pesawat.
-    Akan diimplementasikan pada Part 5.
+    Menampilkan riwayat penerbangan berdasarkan ICAO24.
     """
+
+    if request.method != "GET":
+        return JsonResponse(
+            {
+                "success": False,
+                "message": "Method not allowed.",
+            },
+            status=405,
+        )
+
+    aircraft = get_object_or_404(
+        FollowedAircraft,
+        icao24=icao24,
+    )
+
+    logs = FlightLog.objects.filter(
+        followed_aircraft=aircraft
+    ).order_by("timestamp")
 
     return JsonResponse(
         {
-            "success": False,
-            "message": "Not implemented yet.",
-            "icao24": icao24,
-        },
-        status=501,
+            "success": True,
+            "aircraft": {
+                "icao24": aircraft.icao24,
+                "callsign": aircraft.callsign,
+                "origin_country": aircraft.origin_country,
+                "followed_at": aircraft.followed_at.isoformat(),
+            },
+            "count": logs.count(),
+            "data": [
+                {
+                    "latitude": log.latitude,
+                    "longitude": log.longitude,
+                    "altitude": log.altitude,
+                    "timestamp": log.timestamp.isoformat(),
+                }
+                for log in logs
+            ],
+        }
     )
     
 # Create your views here.
