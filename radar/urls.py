@@ -1,11 +1,12 @@
 from django.urls import path
+from .consumers import LiveAircraftConsumer
 
 from . import views
 
 urlpatterns = [
     # path("", index, name="index"),
     path("", views.index, name="index"),
-        
+    
     path("api/aircraft/", views.aircraft_list, name="aircraft_list"),
     path("api/followed-aircraft/", views.followed_aircraft_list, name="followed_aircraft_list"),
     path("api/follow-aircraft/", views.follow_aircraft_view, name="follow_aircraft"),
