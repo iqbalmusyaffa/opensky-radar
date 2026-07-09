@@ -86,12 +86,25 @@ def get_access_token():
 def fetch_live_aircraft(max_results=10):
     access_token = get_access_token()
     headers = {"Authorization": f"Bearer {access_token}"}
-    response = requests.get(STATES_URL, headers=headers, timeout=10, )
+    
+    params = {
+        "lamin": INDONESIA_BBOX["lamin"],
+        "lomin": INDONESIA_BBOX["lomin"],
+        "lamax": INDONESIA_BBOX["lamax"],
+        "lomax": INDONESIA_BBOX["lomax"],
+    }
+    
+    response = requests.get(STATES_URL, params=params, timeout=10)
     response.raise_for_status()
     data = response.json()
 
     aircraft_list = []
-    for state in data.get("states", []):
+    
+    states = data.get("states")
+    if not states:
+        return aircraft_list
+        
+    for state in states:
         if len(aircraft_list) >= max_results:
             break
 

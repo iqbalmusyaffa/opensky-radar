@@ -37,7 +37,7 @@ class LiveAircraftConsumer(AsyncJsonWebsocketConsumer):
                     pass
 
             try:
-                await asyncio.sleep(5)
+                await asyncio.sleep(12)
             except asyncio.CancelledError:
                 break
 
