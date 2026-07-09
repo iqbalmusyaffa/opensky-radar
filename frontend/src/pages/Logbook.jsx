@@ -50,11 +50,11 @@ export default function Logbook() {
                 </p>
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-lg">
+            <div className="glass-panel-no-hover overflow-hidden mt-6">
 
                 <table className="min-w-full">
 
-                    <thead className="bg-slate-800 text-slate-300">
+                    <thead className="bg-slate-800/40 text-slate-300">
 
                         <tr>
                             <th className="px-4 py-3 text-left">

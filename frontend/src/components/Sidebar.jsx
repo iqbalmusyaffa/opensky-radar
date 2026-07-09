@@ -26,7 +26,7 @@ const menus = [
 
 export default function Sidebar() {
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-slate-800 bg-slate-950">
+    <aside className="flex h-screen w-64 flex-col border-r border-slate-700/50 bg-slate-900/40 backdrop-blur-xl">
 
       {/* Logo */}
       <div className="border-b border-slate-800 p-6">
@@ -71,9 +71,9 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-slate-800 p-4">
-        <div className="rounded-lg bg-slate-900 p-4">
-          <p className="text-xs uppercase tracking-wider text-slate-500">
+      <div className="border-t border-slate-700/50 p-4">
+        <div className="rounded-lg bg-slate-800/40 p-4 backdrop-blur-md border border-slate-700/50">
+          <p className="text-xs uppercase tracking-wider text-slate-400">
             Status
           </p>
 

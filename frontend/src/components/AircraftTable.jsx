@@ -7,8 +7,8 @@ export default function AircraftTable({
   onView,
 }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-lg">
-      <div className="border-b border-slate-700 px-6 py-4">
+    <div className="glass-panel-no-hover overflow-hidden">
+      <div className="border-b border-slate-700/50 px-6 py-4">
         <h2 className="text-lg font-semibold text-white">Live Aircraft</h2>
         <p className="text-sm text-slate-400">
           Realtime aircraft over Indonesia
@@ -17,7 +17,7 @@ export default function AircraftTable({
 
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm">
-          <thead className="bg-slate-800 text-slate-300">
+          <thead className="bg-slate-800/40 text-slate-300">
             <tr>
               <th className="px-4 py-3 text-left">ICAO24</th>
               <th className="px-4 py-3 text-left">Callsign</th>

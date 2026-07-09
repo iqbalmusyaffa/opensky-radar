@@ -7,7 +7,7 @@ import {
 
 export default function Navbar() {
     return (
-        <nav className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950 shadow-lg">
+        <nav className="sticky top-0 z-50 border-b border-slate-700/50 bg-slate-900/40 backdrop-blur-xl shadow-lg">
             <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
 
                 {/* Logo */}

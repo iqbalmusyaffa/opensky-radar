@@ -30,8 +30,8 @@ export default function FlightHistory({ icao24, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-6">
-      <div className="w-full max-w-5xl rounded-xl bg-slate-900 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-slate-700 p-5">
+      <div className="glass-panel-no-hover w-full max-w-5xl shadow-2xl">
+        <div className="flex items-center justify-between border-b border-slate-700/50 p-5">
           <div>
             <h2 className="text-2xl font-bold text-white">Flight History</h2>
 

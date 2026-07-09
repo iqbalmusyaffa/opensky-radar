@@ -15,47 +15,45 @@ class LiveAircraftConsumer(AsyncJsonWebsocketConsumer):
     async def send_live_data(self):
         while True:
             try:
-                print("=== Fetching aircraft ===")
-
                 aircraft = await sync_to_async(
                     fetch_live_aircraft
                 )(10)
                 await sync_to_async(save_flight_logs)(aircraft)
-                print(f"Jumlah aircraft: {len(aircraft)}")
-                print(aircraft)
 
                 await self.send_json({
                     "type": "radar_update",
                     "aircraft": aircraft,
                 })
 
+            except asyncio.CancelledError:
+                break
             except Exception as e:
-                print("ERROR:", e)
+                try:
+                    await self.send_json({
+                        "type": "error",
+                        "message": str(e),
+                    })
+                except:
+                    pass
 
-                await self.send_json({
-                    "type": "error",
-                    "message": str(e),
-                })
-
-            await asyncio.sleep(5)
+            try:
+                await asyncio.sleep(5)
+            except asyncio.CancelledError:
+                break
 
     async def disconnect(self, close_code):
-        if hasattr(self, "task"):
+        if hasattr(self, "task") and not self.task.done():
             self.task.cancel()
 
-async def receive(self, text_data=None, bytes_data=None):
-    if text_data == "get_aircraft":
-        aircraft = await sync_to_async(
-            fetch_live_aircraft
-        )(10)
-        await sync_to_async(save_flight_logs)(aircraft)
-        await self.send_json(
-            {
-                "type": "radar_update",
-                "aircraft": aircraft,
-            }
-        )
-        
-async def disconnect(self, close_code):
-    if hasattr(self, "task") and not self.task.done():
-        self.task.cancel()
+    async def receive(self, text_data=None, bytes_data=None):
+        if text_data == "get_aircraft":
+            aircraft = await sync_to_async(
+                fetch_live_aircraft
+            )(10)
+            await sync_to_async(save_flight_logs)(aircraft)
+            await self.send_json(
+                {
+                    "type": "radar_update",
+                    "aircraft": aircraft,
+                }
+            )

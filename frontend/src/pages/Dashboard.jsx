@@ -20,8 +20,9 @@ export default function Dashboard() {
     useEffect(() => {
         loadFollowing();
 
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const socket = new WebSocket(
-            "ws://127.0.0.1:8000/ws/radar/"
+            `${protocol}//${window.location.host}/ws/radar/`
         );
 
         socket.onopen = () => {

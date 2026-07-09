@@ -28,7 +28,7 @@ export default function RadarCard({
     };
 
     return (
-        <div className="rounded-xl border border-slate-700 bg-slate-900 p-5 shadow-lg">
+        <div className="glass-panel p-5">
             <div className="flex items-center justify-between">
 
                 <div>

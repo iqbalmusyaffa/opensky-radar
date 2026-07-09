@@ -23,6 +23,11 @@ function App() {
                 />
 
                 <Route
+                    path="/history"
+                    element={<History />}
+                />
+
+                <Route
                     path="/history/:icao24"
                     element={<History />}
                 />
